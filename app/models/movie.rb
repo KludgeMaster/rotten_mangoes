@@ -30,6 +30,42 @@ class Movie < ActiveRecord::Base
     end
   end
 
+  def self.search(search)
+    if search
+      # if !search title.empty?&& !searchc director.empty?
+      #   Movie.where("title LIKE ? OR director LIKE ?","%#{search[:title]}%","%#{search[:director]}%" )
+      # elsif title
+      #   Movie.where("title LIKE ?", "%#{search[:title]}%")
+      # else # dirctore present
+      #   Movie.where("director LIKE ?", "%#{search[:director]}%")
+      # end
+
+      if search[:title] && search[:director].empty?
+        movies = Movie.where("title LIKE ?", "%#{search[:title]}%")
+      elsif search[:title].empty? && search[:director]
+        movies = Movie.where("director LIKE ?", "%#{search[:director]}%")
+      else
+        movies = Movie.where("title LIKE ? OR director LIKE ?","%#{search[:title]}%","%#{search[:director]}%" )
+      end      
+      # if search[:duration] != "0"
+      #   result=[]
+      #   binding.pry
+      #   movies.each do |movie|
+      #     if search[:duration] == "1" && movie.runtime_in_minutes < 90
+      #       result << movie
+      #     elsif search[:duration] == "3" && movie.runtime_in_minutes > 120
+      #       result << movie
+      #     elsif movie.runtime_in_minutes >= 90 && movie.runtime_in_minutes <= 120
+      #       result << movie
+      #     end
+      #   end
+      #   result.first
+      # end
+    else
+      all
+    end
+  end
+
   protected
  
   def release_date_is_in_the_future

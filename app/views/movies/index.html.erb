@@ -1,6 +1,26 @@
 <h1>Rotten Mangoes</h1>
 <%= link_to "Submit a movie!", new_movie_path %>
 <hr>
+<div class="searchbar">
+  <%= form_tag movies_path, method: "get" do %>
+    <%= label_tag(:movies,"Search for:") %>
+    <%= text_field_tag("search[title]" )%>
+    <%= text_field_tag("search[director]") %>
+    <%= select_tag("search[duration]", options_for_select(
+      [
+        ["Select an option", 0],
+        ["Under 90 minutes", 1],
+        ["Between 90 and 120 minutes",2],
+        ["Over 120 mintues",3]
+      ]
+    ) ) %>
+    <%= submit_tag("Search", name: nil) %>
+  <%end%>
+</div>
+
+
+
+<hr>
 <% @movies.each do |movie| %>
   <%= link_to image_tag(movie.poster_image_url), movie_path(movie) %>
   <%= link_to image_tag(movie.image), movie_path(movie) %>
@@ -9,5 +29,6 @@
   <h3><%= formatted_date(movie.release_date) %> <h3>
   <h4>Dir. <%= movie.director %> | <%= movie.runtime_in_minutes %> minutes</h4>
   <p><%= movie.description %></p>
-  <hr>
 <% end %>
+<hr>
+

@@ -3,7 +3,7 @@ class MoviesController < ApplicationController
   
   # before_action :must_be_logged_in
   def index
-    @movies = Movie.all
+    @movies = Movie.search(params[:search])
   end
 
   def show
