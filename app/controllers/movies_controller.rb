@@ -1,6 +1,7 @@
 
 class MoviesController < ApplicationController
   
+  # before_action :must_be_logged_in
   def index
     @movies = Movie.all
   end
@@ -10,11 +11,19 @@ class MoviesController < ApplicationController
   end
 
   def new
-    @movie = Movie.new
+    if current_user
+      @movie = Movie.new
+    else
+      redirect_to new_session_path, notice: "Please sign in first"
+    end
   end
 
   def edit
-    @movie = Movie.find(params[:id])
+    if current_user
+      @movie = Movie.find(params[:id])
+    else
+      redirect_to new_session_path, notice: "Please sign in first"
+    end
   end
 
   def create
@@ -28,23 +37,37 @@ class MoviesController < ApplicationController
   end
 
   def update
-    @movie = Movie.find(params[:id])
+    if current_user
+      @movie = Movie.find(params[:id])
 
-    if @movie.update_attributes(movie_params)
-      redirect_to movie_path(@movie)
+      if @movie.update_attributes(movie_params)
+        redirect_to movie_path(@movie)
+      else
+        render :edit
+      end
     else
-      render :edit
+      redirect_to new_session_path, notice: "Please sign in first"
     end
   end
 
   def destroy
-    @movie = Movie.find(params[:id])
-    @movie.destroy
-    redirect_to movies_path
+    if current_user
+      @movie = Movie.find(params[:id])
+      @movie.destroy
+      redirect_to movies_path
+    else
+      redirect_to new_session_path, notice: "Please sign in first"
+    end
   end
 
   protected
   
+  # def must_be_logged_in
+  #   unless current_user
+  #     redirect_to movies_path
+  #   end
+  # end
+
   def movie_params
     params.require(:movie).permit(
       :title, :release_date, :director, :runtime_in_minutes, :poster_image_url, :description, :image

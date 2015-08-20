@@ -40,6 +40,8 @@ gem "rmagick"
 gem "carrierwave"
 gem 'pry'
 
+gem 'kaminari'
+
 # Use unicorn as the app server
 # gem 'unicorn'
 
